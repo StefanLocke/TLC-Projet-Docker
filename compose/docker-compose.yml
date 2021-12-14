@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  back:
+    image: myback:latest
+    environment:
+      - quarkus.datasource.jdbc.url=jdbc:mysql://db:3306/tlc?useUnicode=true&serverTimezone=Europe/Paris
+    ports:
+      - 8080:8080
+    links:
+      - db
+    restart: always
+
+  font:
+    image: myfont:latest
+    ports:
+      - 8000:80
+  db:
+      image: mysql
+      environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=tlc
+        - MYSQL_USER=tlc
+        - MYSQL_PASSWORD=tlc
+      ports: 
+        - 3306:3306
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links: 
+      - db
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    restart: always
+    ports:
+      - 8081:80
